@@ -1,0 +1,30 @@
+{
+  "name": "screenshot-server",
+  "version": "0.0.1",
+  "description": "A server which launches all available browsers and listens for screenshot requests.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Nathan Hammond",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.12.2",
+    "selenium-webdriver": "^2.45.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nathanhammond/screenshot-server.git"
+  },
+  "keywords": [
+    "screenshot",
+    "selenium",
+    "takeScreenshot"
+  ],
+  "bugs": {
+    "url": "https://github.com/nathanhammond/screenshot-server/issues"
+  },
+  "homepage": "https://github.com/nathanhammond/screenshot-server"
+}
