@@ -25,6 +25,6 @@
   "homepage": "https://github.com/nathanhammond/screenshot-server",
   "dependencies": {
     "express": "^4.12.2",
-    "selenium-webdriver": "^2.45.1"
+    "selenium-webdriver": "^2.46.0"
   }
 }

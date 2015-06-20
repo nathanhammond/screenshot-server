@@ -6,6 +6,9 @@ var fs = require('fs');
 
 // TODO: Select target rendering page
 
+// base64 of previous screen
+var prevScreen = undefined;
+
 // Null prototype doesn't have a few useful functions.
 function o_keys(dict) {
   return Object.keys.call(Object, dict);
@@ -45,7 +48,7 @@ app.get('/', function (req, res) {
   res.send('Screenshot server ready.');
 });
 
-app.post('/', function (req, res) {
+app.post('/takeScreenshot', function (req, res) {
   var browser = req.query.screenshotClientID;
   var driver = drivers[browser];
 
@@ -68,11 +71,14 @@ app.post('/', function (req, res) {
       });
     })
     .then(function(base64) {
-      return new Promise(function(resolve, reject) {
-        fs.writeFile('./screenshots/' + browser + '/' + new Date().getTime() + '.png', base64, {encoding: 'base64'}, function(error) {
-          error ? reject(error) : resolve(true);
+      if(prevScreen !== base64){
+        prevScreen = base64;
+        return new Promise(function(resolve, reject) {
+          fs.writeFile('./screenshots/' + browser + '/' + new Date().getTime() + '.png', base64, {encoding: 'base64'}, function(error) {
+            error ? reject(error) : resolve(true);
+          });
         });
-      });
+      }
     })
     .then(function() {
       return res.sendStatus(204);
@@ -93,6 +99,6 @@ var server = app.listen(3000, function() {
     var driver = drivers[browser];
     driver.manage().window().setPosition(0, 0)
     driver.manage().window().maximize();
-    driver.get('http://localhost:4200/tests?'+querystring.stringify({ screenshotServerURL: screenshotServerURL, screenshotClientID: browser }));
+    driver.get('http://localhost:4200/tests?nojshint&filter=acceptance&'+querystring.stringify({ screenshotServerURL: screenshotServerURL, screenshotClientID: browser }));
   });
 });
