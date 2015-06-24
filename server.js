@@ -8,6 +8,8 @@ var fs = require('fs');
 
 // base64 of previous screen
 var prevScreen = undefined;
+var prevTestId = undefined;
+var testIdImgCount = 0;
 
 // Null prototype doesn't have a few useful functions.
 function o_keys(dict) {
@@ -49,11 +51,11 @@ app.get('/', function (req, res) {
 });
 
 app.post('/takeScreenshot', function (req, res) {
+  var testid = req.query.testid;
   var browser = req.query.screenshotClientID;
   var driver = drivers[browser];
 
   // TODO: Force full-height screenshots outside of Firefox.
-
   // TODO: take screenshots at multiple sizes.
   // TODO: Enable size configuration.
   // driver.manage().window().setSize(1280, , 10));
@@ -71,10 +73,11 @@ app.post('/takeScreenshot', function (req, res) {
       });
     })
     .then(function(base64) {
-      if(prevScreen !== base64){
+      if((testid != prevTestId) || (prevScreen !== base64)){
         prevScreen = base64;
+
         return new Promise(function(resolve, reject) {
-          fs.writeFile('./screenshots/' + browser + '/' + new Date().getTime() + '.png', base64, {encoding: 'base64'}, function(error) {
+          fs.writeFile('./screenshots/' + browser + '/' + getFileName(testid) + '.png', base64, {encoding: 'base64'}, function(error) {
             error ? reject(error) : resolve(true);
           });
         });
@@ -84,6 +87,16 @@ app.post('/takeScreenshot', function (req, res) {
       return res.sendStatus(204);
     });
 });
+
+function getFileName(testid){
+  if(prevTestId !== testid){
+    prevTestId = testid;
+    testIdImgCount = 0;
+  }else{
+    testIdImgCount++;
+  }
+  return testid + '-' + testIdImgCount;
+}
 
 // Kick off the server.
 var server = app.listen(3000, function() {
