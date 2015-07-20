@@ -1,6 +1,6 @@
 {
   "name": "screenshot-server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A server which launches all available browsers and listens for screenshot requests.",
   "main": "server.js",
   "scripts": {
